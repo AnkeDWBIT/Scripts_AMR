@@ -6,7 +6,7 @@ import os
 import xlsxwriter
 
 # In a folder, look for each subfolder and save the folder name as the sample name
-input_dir = "/home/guest/BIT11_Traineeship/Ecoli_AMR/ResFinder_tool/resfinder_output_test_batch15"
+input_dir = "/home/guest/BIT11_Traineeship/Ecoli_AMR/ResFinder_tool/resfinder_output"
 data_file = "pheno_table.txt"
 
 # List of antibiotics to look for in the ResFinder results
@@ -17,7 +17,7 @@ AB_list = ["amikacin", "amoxicillin", "amoxicillin+clavulanic acid", "aztreonam"
             ]
 
 # Make an Excel file to store the summary data
-output_file = "ResFinder_summary_test_batch15.xlsx"
+output_file = "ResFinder_summary.xlsx"
 output_dir = "/home/guest/BIT11_Traineeship/Ecoli_AMR/ResFinder_tool/"
 wb = xlsxwriter.Workbook(os.path.join(output_dir, output_file))
 ws = wb.add_worksheet("ResFinder_summary")
