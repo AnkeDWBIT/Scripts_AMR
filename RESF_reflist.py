@@ -78,7 +78,7 @@ for subdir, dirs, files in os.walk(input_dir):
 # STEP 2 : Create an Excel file to store the reference list
 ############################################################################################################################################################
 wb = xlsxwriter.Workbook(output_file)
-ws = wb.add_worksheet("BN_reflist")
+ws = wb.add_worksheet("RESF_reflist")
 # Write the header line
 header = ["Gene", "Antibiotic"]
 ws.write_row(0, 0, header)
