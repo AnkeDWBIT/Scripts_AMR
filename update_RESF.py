@@ -5,7 +5,7 @@
 import openpyxl
 
 # Read the input & output file
-input_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/ResFinder_tool/ResFinder_summary_test_batch15.xlsx"
+input_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/ResFinder_tool/ResFinder_summary.xlsx"
 output_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/INFO_MTT_STRAINS.xlsx"
 
 # Load the input and output workbooks
