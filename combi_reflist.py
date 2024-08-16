@@ -27,7 +27,8 @@ def create_dict(wb,dict):
     for row in ws.iter_rows(min_row=3, max_col=2, values_only=True):
         key = row[0]
         value = row[1].lower()
-        dict[key] = [value]
+        antibiotics = [antibiotic.strip() for antibiotic in value.split(',')]  # Split the string into individual antibiotics and strip whitespace
+        dict[key] = antibiotics
 
 # Storing the data from combi_wb & BN_wb in a dictionary each
 create_dict(RESF_wb, combi_dict)
