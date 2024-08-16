@@ -6,7 +6,7 @@ import openpyxl
 
 # Read the input & output file
 input_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/ResFinder_tool/ResFinder_summary.xlsx"
-output_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/INFO_MTT_STRAINS.xlsx"
+output_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/INFO_MTT_STRAINS_updated_RESF.xlsx"
 
 # Load the input and output workbooks
 input_wb = openpyxl.load_workbook(input_file)
@@ -14,7 +14,7 @@ output_wb = openpyxl.load_workbook(output_file)
 
 # Select the active sheets (assuming there's only one sheet in each file)
 input_ws = input_wb.active
-output_ws = output_wb.active
+output_ws = output_wb["Comparative AMR (2)"]
 
 # Start row at 3
 row = 3
