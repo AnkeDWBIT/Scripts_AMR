@@ -72,6 +72,10 @@ for file in files:
 
     # Loop through all genes from the sample and look for a match in the reference list
     for gene in genes:
+        if gene =="oxa-9":
+            gene = "blaoxa-9"
+        if gene =="tem-1":
+            gene = "blatem-1A"
         for row in ref_ws.iter_rows(min_row=3, max_col=2, max_row=ref_ws.max_row):
             gene_reflist = row[0].value
             if gene == gene_reflist:
@@ -104,5 +108,4 @@ wb.close()
 
 # Print a message to indicate the script has finished
 print(f"Summary Excel file {output_file} has been created successfully at location {output_dir}!")
- 
  
