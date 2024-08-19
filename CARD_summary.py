@@ -10,8 +10,8 @@ import xlsxwriter
 import openpyxl
 
 # Folder with CARD results & file with gene-AB reference list
-input_dir = "/home/guest/BIT11_Traineeship/Ecoli_AMR/CARD_subset15/"
-reflist = "/home/guest/BIT11_Traineeship/Ecoli_AMR/combi_reflist_RESF_BN.xlsx"
+input_dir = "/home/anked/BIT11_Traineeship/Ecoli_AMR/RGI_CARD/Ecoli_WGS/RGI_output/"
+reflist = "/home/anked/BIT11_Traineeship/Ecoli_AMR/combi_reflist_RESF_BN.xlsx"
 
 # List of antibiotics to look for in the CARD results
 AB_list = ["amikacin", "amoxicillin", "amoxicillin+clavulanic acid", "aztreonam",
@@ -23,7 +23,7 @@ AB_list = ["amikacin", "amoxicillin", "amoxicillin+clavulanic acid", "aztreonam"
 # STEP 1 : Make an Excel file to store the summary data further in the script
 ####################################################################################################################################
 output_file = "CARD_summary.xlsx"
-output_dir = "/home/guest/BIT11_Traineeship/Ecoli_AMR/"
+output_dir = "/home/anked/BIT11_Traineeship/Ecoli_AMR/"
 wb = xlsxwriter.Workbook(os.path.join(output_dir, output_file))
 ws = wb.add_worksheet("CARD_summary")
 
@@ -60,10 +60,11 @@ for file in files:
         # Read each line of the file
         for line in f:
             # Extract the gene name and add to the list of genes from the sample
-            select_crit = line.split('\t')[10]
-            if select_crit == "Perfect/Strict":
+            select_crit = line.split('\t')[5]
+            if select_crit == "Perfect" or select_crit == "Strict":
                 gene_name = line.split('\t')[8]
-                genes.append(gene_name)
+                if gene_name not in genes:
+                    genes.append(gene_name)
 
     # Load the reference list workbook & select the combi list (both BN & RESF results)
     ref_wb = openpyxl.load_workbook(reflist)
@@ -74,7 +75,7 @@ for file in files:
         for row in ref_ws.iter_rows(min_row=3, max_col=2, max_row=ref_ws.max_row):
             gene_reflist = row[0].value
             if gene == gene_reflist:
-                print(gene)
+                #print(gene)
                 # Save the antibiotics from the reference list to the list of ABs
                 AB_reflist = row[1].value
                 antibiotics = [antibiotic.strip() for antibiotic in AB_reflist.split(',')]  # Split the string into individual antibiotics and strip whitespace
@@ -103,6 +104,5 @@ wb.close()
 
 # Print a message to indicate the script has finished
 print(f"Summary Excel file {output_file} has been created successfully at location {output_dir}!")
-
-
+ 
  
