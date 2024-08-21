@@ -24,6 +24,7 @@ AB_list = ["amikacin", "amoxicillin", "amoxicillin+clavulanic acid", "aztreonam"
 # STEP 1 : Make an Excel file to store the summary data further in the script
 ####################################################################################################################################
 output_file = "AMRFPlus_summary.xlsx"
+#output_file = "AMRFPlus_summary_blaTEM-1.xlsx"
 output_dir = "/home/guest/BIT11_Traineeship/Ecoli_AMR/"
 wb = xlsxwriter.Workbook(os.path.join(output_dir, output_file))
 ws = wb.add_worksheet("AMRFPlus_summary")
@@ -79,7 +80,14 @@ for file in files:
                 antibiotics = [antibiotic.strip() for antibiotic in AB_reflist.split(',')]  # Split the string into individual antibiotics and strip whitespace
                 for antibiotic in antibiotics:
                     if antibiotic not in ABs:
-                        ABs.append(antibiotic)                   
+                        ABs.append(antibiotic)
+                        """
+            if gene == "blaTEM-1":
+                if "amoxicillin" not in ABs:
+                    ABs.append("amoxicillin")
+                if "piperacillin" not in ABs:
+                    ABs.append("piperacillin")
+                    """
 
 
     # STEP 3 : Fill in the Excel file with the phenotypic data for each AB in the study for each sample/strain
