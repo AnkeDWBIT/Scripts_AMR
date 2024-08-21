@@ -22,7 +22,7 @@ AB_list = ["amikacin", "amoxicillin", "amoxicillin+clavulanic acid", "aztreonam"
 
 # STEP 1 : Make an Excel file to store the summary data further in the script
 ####################################################################################################################################
-output_file = "CARD_summary.xlsx"
+output_file = "CARD_summary_2.xlsx"
 output_dir = "/home/anked/BIT11_Traineeship/Ecoli_AMR/"
 wb = xlsxwriter.Workbook(os.path.join(output_dir, output_file))
 ws = wb.add_worksheet("CARD_summary")
@@ -62,7 +62,7 @@ for file in files:
             # Extract the gene name and add to the list of genes from the sample
             select_crit = line.split('\t')[5]
             if select_crit == "Perfect" or select_crit == "Strict":
-                gene_name = line.split('\t')[8]
+                gene_name = line.split('\t')[8].lower()
                 if gene_name not in genes:
                     genes.append(gene_name)
 
@@ -72,13 +72,13 @@ for file in files:
 
     # Loop through all genes from the sample and look for a match in the reference list
     for gene in genes:
-        if gene =="oxa-9":
-            gene = "blaoxa-9"
-        if gene =="tem-1":
-            gene = "blatem-1A"
+        #if gene =="oxa-9":
+            #gene = "blaoxa-9"
+        #if gene =="tem-1":
+            #gene = "blatem-1A"
         for row in ref_ws.iter_rows(min_row=3, max_col=2, max_row=ref_ws.max_row):
             gene_reflist = row[0].value
-            if gene == gene_reflist:
+            if gene.lower() == gene_reflist.lower():
                 #print(gene)
                 # Save the antibiotics from the reference list to the list of ABs
                 AB_reflist = row[1].value
