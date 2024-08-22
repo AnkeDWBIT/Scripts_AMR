@@ -6,9 +6,9 @@ from openpyxl import load_workbook
 import xlsxwriter
 
 # Saving the paths to the files in an object
-BN_list = "/home/guest/BIT11_Traineeship/Ecoli_AMR/BN_reflist.xlsx"
-RESF_list = "/home/guest/BIT11_Traineeship/Ecoli_AMR/RESF_reflist.xlsx" 
-outfile = "/home/guest/BIT11_Traineeship/Ecoli_AMR/combi_reflist_RESF_BN.xlsx" 
+BN_list = "/home/guest/BIT11_Traineeship/Ecoli_AMR/Reference_lists/BN_reflist.xlsx"
+RESF_list = "/home/guest/BIT11_Traineeship/Ecoli_AMR/Reference_lists/RESF_reflist.xlsx" 
+outfile = "/home/guest/BIT11_Traineeship/Ecoli_AMR/Reference_lists/combi_reflist_RESF_BN.xlsx" 
 
 # Loading input-& output-file
 BN_wb = load_workbook(BN_list)
@@ -52,7 +52,7 @@ nb_genes = (len(combi_dict))
 # STEP 2 : Create a new Excel-file and save the combi_dict
 ##################################################################################################################################
 wb_outfile = xlsxwriter.Workbook(outfile)
-ws_outfile = wb_outfile.add_worksheet("combi_reflist")
+ws_outfile = wb_outfile.add_worksheet("RESF_BN_combi_reflist")
 
 # Write the header line
 header = ["Gene", "Antibiotic"]
