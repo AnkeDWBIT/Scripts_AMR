@@ -6,8 +6,8 @@ import os
 import xlsxwriter
 
 # Define the input-dir & output-file
-input_dir = "/home/guest/BIT11_Traineeship/Ecoli_AMR/ResFinder_tool/resfinder_output"
-output_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/RESF_reflist.xlsx"
+input_dir = "/home/guest/BIT11_Traineeship/Ecoli_AMR/ResFinder_output"
+output_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/Reference_lists/RESF_reflist.xlsx"
 
 # STEP 1 : Retrieve data from the input_dir and save it in a dictionary
 ############################################################################################################################################################
@@ -50,8 +50,9 @@ for subdir, dirs, files in os.walk(input_dir):
                         # Split the line into columns and retrieve phenotype, AB and gene
                         parts = line.split('\t')
                         phenotype = parts[2].strip()
-                        if phenotype == "Resistant":
+                        if phenotype == "Resistant" and len(parts) >= 5: # Only process the line if the phenotype is "Resistant" and the gene column is present
                             antibiotic = parts[0].strip()
+
                             genes = parts[4].strip() # Genes are only present when the phenotype is "Resistant"
                             #print(f"\n {phenotype} - {antibiotic} - {genes}.")
 
