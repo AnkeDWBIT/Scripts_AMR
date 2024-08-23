@@ -16,6 +16,7 @@ data_dict = {}
 for subdir, dirs, files in os.walk(input_dir):
     sample = os.path.basename(subdir)
     for file in files:
+        
         if file == "pheno_table.txt" :
             file_path = os.path.join(subdir, file)
             #print(f"Found data for sample {sample} in file {file}")
@@ -73,8 +74,33 @@ for subdir, dirs, files in os.walk(input_dir):
                                         data_dict[gene].append(antibiotic)
                                     else:
                                         continue
+                                                           
+        if file == "PointFinder_results.txt" :
+            file_path = os.path.join(subdir, file)
+            #print(f"Found data for sample {sample} in file {file}")
+            # Read the text file
+            with open(file_path, 'r') as file:
+                lines = file.readlines()
+                # Skip the first line
+                lines.pop(0)
+                # Iterate through the lines
+                for line in lines:
+                    # Strip the line of leading/trailing whitespaces
+                    line = line.strip()
+                    # Split the line into columns
+                    parts = line.split('\t')
+                    gene = parts[0].strip()
+                    # Split gene names based on space and save the first part
+                    gene = gene.split(" ")[0]
+                    ABs = parts[3].strip()
+                    if gene not in data_dict:
+                        data_dict[gene] = [ABs]
+                    else:
+                        if ABs not in data_dict[gene]:
+                            data_dict[gene].append(ABs)
+                        else:
+                            continue
 
-#print(data_dict)
                      
 # STEP 2 : Create an Excel file to store the reference list
 ############################################################################################################################################################
