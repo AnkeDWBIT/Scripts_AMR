@@ -24,11 +24,11 @@ ws_name = sys.argv[1]
 input_file = sys.argv[2]
 """
 
-# Function to convert error from list (found in input file; MIC different from tool) to desired format for the output file
+# Functions to convert error from list (found in input file; MIC different from tool) to desired format for the output file
 def format_errors(error_list):
     if not error_list:
         return "/"  # Return / if there are no errors
-    return f"{len(error_list)} \t ({', '.join(error_list)})"
+    return f"{len(error_list)}"  # Return the number of errors
 
 # Load the Excel worksheet
 input_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/INFO_MTT_STRAINS_updated_RESF_CARD_AMRF_corrected_2.xlsx"
@@ -43,6 +43,10 @@ ws_output = wb_output.add_worksheet()
 
 # Define layout formats for the output file
 bold_format = wb_output.add_format({'bold': True})
+detail_errors = wb_output.add_format({'font_color': '#404040'})
+# Apply detail_errors format to the detailed error columns (18-25)
+for col in range(18, 26):
+    ws_output.set_column(col, col, None, detail_errors)
 
 # Write headers to the output worksheet
 ws_output.write(1, 0, "Antibiotic", bold_format)
@@ -65,15 +69,29 @@ ws_output.write(1, 12, "Minor errors", bold_format)
 ws_output.write(16, 0, "Mean agreement per tool", bold_format)
 ws_output.write(1, 14, "Mean agreement per AB", bold_format)
 
+# Write headers for detailed description of the errors
+ws_output.write(0,18, "RESF")
+ws_output.write(1,18, "Major errors")
+ws_output.write(1,19, "Minor errors")
+ws_output.write(0,20, "BN")
+ws_output.write(1,20, "Major errors")
+ws_output.write(1,21, "Minor errors")
+ws_output.write(0,22, "CARD")
+ws_output.write(1,22, "Major errors")
+ws_output.write(1,23, "Minor errors")
+ws_output.write(0,24, "AMRF+")
+ws_output.write(1,24, "Major errors")
+ws_output.write(1,25, "Minor errors")
+
 # Add input file, it's used worksheet name & creation date of the output file at the bottom
-ws_output.write(20, 0, "Input file:")
-ws_output.write(20, 1, input_file)
-ws_output.write(21, 0, "Worksheet:")
-ws_output.write(21, 1, ws.title)
-ws_output.write(22, 0, "Date:")
+ws_output.write(20, 18, "Input file:")
+ws_output.write(20, 19, input_file)
+ws_output.write(21, 18, "Worksheet:")
+ws_output.write(21, 19, ws.title)
+ws_output.write(22, 18, "Date:")
 now = datetime.datetime.now()
 current_time_str = now.strftime("%Y-%m-%d %H:%M")
-ws_output.write(22, 1, current_time_str)
+ws_output.write(22, 19, current_time_str)
 
 # Initialize lists to store the agreement percentages per tool
 all_RESF_agreement_values = []
@@ -194,6 +212,25 @@ for antibiotic_index in range(13):
     ws_output.write(2 + antibiotic_index, 11, format_errors(AMRF_major_errors))
     ws_output.write(2 + antibiotic_index, 12, format_errors(AMRF_minor_errors))
     ws_output.write(2 + antibiotic_index, 14, round(mean_agreement_per_AB, 2))
+
+    # Add the detailed errors to the output file, first convert the lists to strings
+    RESF_major_errors = ", ".join(RESF_major_errors)
+    RESF_minor_errors = ", ".join(RESF_minor_errors)
+    BN_major_errors = ", ".join(BN_major_errors)
+    BN_minor_errors = ", ".join(BN_minor_errors)
+    CARD_major_errors = ", ".join(CARD_major_errors)
+    CARD_minor_errors = ", ".join(CARD_minor_errors)
+    AMRF_major_errors = ", ".join(AMRF_major_errors)
+    AMRF_minor_errors = ", ".join(AMRF_minor_errors)
+
+    ws_output.write(2 + antibiotic_index, 18, RESF_major_errors)
+    ws_output.write(2 + antibiotic_index, 19, RESF_minor_errors)
+    ws_output.write(2 + antibiotic_index, 20, BN_major_errors)
+    ws_output.write(2 + antibiotic_index, 21, BN_minor_errors)
+    ws_output.write(2 + antibiotic_index, 22, CARD_major_errors)
+    ws_output.write(2 + antibiotic_index, 23, CARD_minor_errors)
+    ws_output.write(2 + antibiotic_index, 24, AMRF_major_errors)
+    ws_output.write(2 + antibiotic_index, 25, AMRF_minor_errors)
 
 # Calculate mean % agreement of each tool (can only be done after looping through all antibiotics)
 mean_RESF_agreement = sum(all_RESF_agreement_values) / 13
