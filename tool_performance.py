@@ -48,6 +48,12 @@ ws = wb[ws_input_name]
 
 # Create an Excel output file if it does not exist yet, otherwise just add a new worksheet
 #output_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/tool_performance.xlsx"
+
+# Avoid overwriting existing files
+if os.path.exists(output_file):
+    print(f"\n Error: The file {output_file} already exists. \n")
+    sys.exit(1)
+    
 wb_output = xlsxwriter.Workbook(output_file)
 ws_output = wb_output.add_worksheet(ws_name)
 
