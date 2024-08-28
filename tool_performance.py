@@ -6,40 +6,50 @@
 
 # Importing the required libraries
 import sys
+import os
 import datetime
 import xlsxwriter
 import openpyxl
 
-"""
+# STEP 1 : HANDLE COMMAND-LINE ARGUMENTS
+################################################################################################################################################
+
 # Check if any command-line arguments have been provided
-if len(sys.argv) < 2:
+if len(sys.argv) < 3:
     print("Error: Need to provide a command-line argument.")
-    print("Usage: python scriptname.py [1] [2]")
-    print("\t[1] = Choose a descriptive worksheet name of the output Excel-file")
-    print("\t[2] = Full path input Excel-file with AMR tool comparison results")
+    print("Usage: python scriptname.py [1] [2][3] [4]")
+    print("\t[1] = Full path to input Excel-file with AMR tool comparison results")
+    print("\t[2] = Name of the worksheet in the input Excel-file")
+    print("\t[3] = Full path where to create the output Excel-file for tool comparison")
+    print("\t[4] = Choose a fitting worksheet name for the output Excel-file")
+
     sys.exit(1)
 
 # Store the command-line argument(s) in an object
-ws_name = sys.argv[1]
-input_file = sys.argv[2]
-"""
+input_file = sys.argv[1]
+ws_input_name = sys.argv[2]
+output_file = sys.argv[3]
+ws_name = sys.argv[4]
 
+# STEP 2 : DEFINE FUNCTIONS
+################################################################################################################################################
 # Functions to convert error from list (found in input file; MIC different from tool) to desired format for the output file
 def format_errors(error_list):
     if not error_list:
         return "/"  # Return / if there are no errors
     return f"{len(error_list)}"  # Return the number of errors
 
+# STEP 3 : READ INPUT FILE, CREATE OUTPUT FILE, DEFINE LAYOUT FORMATS & WRITE HEADERS TO THE OUTPUT FILE
+################################################################################################################################################
 # Load the Excel worksheet
-input_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/INFO_MTT_STRAINS_updated_RESF_CARD_AMRF_corrected_2.xlsx"
+#input_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/INFO_MTT_STRAINS_updated_RESF_CARD_AMRF_corrected_2.xlsx"
 wb = openpyxl.load_workbook(input_file)
-ws = wb["Comparative AMR (2)"]
+ws = wb[ws_input_name]
 
-# Create an Excel output file
-output_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/tool_performance.xlsx"
+# Create an Excel output file if it does not exist yet, otherwise just add a new worksheet
+#output_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/tool_performance.xlsx"
 wb_output = xlsxwriter.Workbook(output_file)
-ws_output = wb_output.add_worksheet()
-#ws_output = wb_output.add_worksheet(ws_name)
+ws_output = wb_output.add_worksheet(ws_name)
 
 # Define layout formats for the output file
 bold_format = wb_output.add_format({'bold': True})
@@ -93,6 +103,8 @@ now = datetime.datetime.now()
 current_time_str = now.strftime("%Y-%m-%d %H:%M")
 ws_output.write(22, 19, current_time_str)
 
+# STEP 4 : PROCESS INPUT & CALCULATE AGREEMENT PER TOOL PER ANTIBIOTIC
+################################################################################################################################################
 # Initialize lists to store the agreement percentages per tool
 all_RESF_agreement_values = []
 all_BN_agreement_values = []
@@ -196,7 +208,9 @@ for antibiotic_index in range(13):
     all_BN_agreement_values.append(BN_agreement_percentage)
     all_CARD_agreement_values.append(CARD_agreement_percentage)
     all_AMRF_agreement_values.append(AMRF_agreement_percentage)
-    
+
+# STEP 5 : WRITE RESULTS TO THE OUTPUT FILE
+################################################################################################################################################
     # Add the results to the output file
     ws_output.write(2 + antibiotic_index, 0, AB, bold_format)
     ws_output.write(2 + antibiotic_index, 1, round(RESF_agreement_percentage, 2))
