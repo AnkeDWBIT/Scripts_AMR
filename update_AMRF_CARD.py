@@ -5,9 +5,9 @@
 import openpyxl
 
 # Read the input & output files
-AMRF_input = "/home/guest/BIT11_Traineeship/Ecoli_AMR/AMRFPlus_summary.xlsx"
+AMRF_input = "/home/guest/BIT11_Traineeship/Ecoli_AMR/Summary_Excel/AMRFPlus_summary.xlsx"
 CARD_input = "/home/guest/BIT11_Traineeship/Ecoli_AMR/CARD_summary.xlsx"
-output_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/INFO_MTT_STRAINS_updated_RESF_CARD_AMRF.xlsx"
+output_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/INFO_MTT_STRAINS.xlsx"
 
 # Load the input and output workbooks
 AMRF_wb = openpyxl.load_workbook(AMRF_input)
@@ -17,7 +17,7 @@ output_wb = openpyxl.load_workbook(output_file)
 # Select the active sheets (assuming there's only one sheet in each file)
 AMRF_ws = AMRF_wb.active
 CARD_ws = CARD_wb.active
-output_ws = output_wb["Comparative AMR (2)"]
+output_ws = output_wb["Comparative_AMR_2"]
 
 # STEP 1 : Transfer the AMRF+ results to the output file
 ################################################################################################################################################
@@ -94,7 +94,7 @@ while row <= AMRF_ws.max_row:
     output_ws.cell(row=row, column=34).value = val_6
     output_ws.cell(row=row, column=41).value = val_7
     output_ws.cell(row=row, column=48).value = val_8
-    output_ws.cell(row=row, column=58).value = val_9
+    output_ws.cell(row=row, column=55).value = val_9
     output_ws.cell(row=row, column=62).value = val_10
     output_ws.cell(row=row, column=69).value = val_12
     output_ws.cell(row=row, column=76).value = val_13
