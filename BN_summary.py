@@ -6,8 +6,7 @@ import os
 import xlsxwriter
 
 # In a folder, look for each subfolder and save the folder name as the sample name
-input_dir = "/home/guest/BIT11_Traineeship/Ecoli_AMR/BN_data"
-data_file = "Resistance-ResultsTableAcq.tsv"
+input_dir = "/home/guest/BIT11_Traineeship/Ecoli_AMR/BioNumerics_out"
 
 # List of antibiotics to look for in the ResFinder results
 AB_list = ["amikacin", "amoxicillin", "amoxicillin+clavulanic acid", "aztreonam",
@@ -96,10 +95,6 @@ for subdir in subdirs:
         
     # Add to the Excel line counter
     excel_line += 1
-
-    # Stop the script after sample MTT284 so that the lasts two samples aren't processed because they aren't included in the study
-    if sample == "MTT284":
-        break
                 
 # Close the workbook
 wb.close()                     
