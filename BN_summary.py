@@ -77,9 +77,8 @@ for subdir in subdirs:
                         continue
                     # Split the line into columns
                     parts = line.split('\t')
-                    antibiotic = parts[0].strip()
+                    antibiotic = parts[0].strip().lower()
                     AB_sample.append(antibiotic)
-    #print(sample, AB_sample)
 
 # STEP 3 : Fill in the Excel file with the phenotypic data for each AB in the study for each sample/strain
 #####################################################################################################
