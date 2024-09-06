@@ -162,6 +162,10 @@ for antibiotic_index in range(13):
         AMRF = ws.cell(row=row, column=AMRF_column).value
         #print(strain, AB, MIC, RESF, BN, CARD, AMRF)
 
+        # Treat MIC = I as R
+        if MIC == "I":
+            MIC = "R"
+
         # Calculate the agreement & errors per tool
         if RESF == MIC:
             RESF_agreement += 1
