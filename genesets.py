@@ -45,6 +45,10 @@ RESF = set(RESF_genes)
 BN = set(BN_genes)
 RGI = set(RGI_genes)
 AMRF = set(AMRF_genes)
+print(f"RESF: {RESF}")
+print(f"BN: {BN}")
+print(f"RGI: {RGI}")
+print(f"AMRF: {AMRF}")
 
 # STEP 2 : Calculate the gene counts and shared genes
 ####################################################################################################################################
@@ -71,7 +75,7 @@ BN_RGI_AMRF = BN & RGI & AMRF
 # Genes shared across all four tools
 intersection = RESF & BN & RGI & AMRF
 
-print(f"Intersection: {len(intersection)} genes occur in all 4 tools.")
+#print(f"Intersection: {len(intersection)} genes occur in all 4 tools.")
 
 # Union = non-redundant/unique genes from all 4 tools combined
 all_genes = RESF | BN | RGI | AMRF
@@ -83,7 +87,7 @@ BN_RGI_union = BN | RGI
 BN_AMRF_union = BN | AMRF
 RGI_AMRF_union = RGI | AMRF
 """
-print(f"Union: {len(all_genes)} unique genes from all 4 sets combined. \n They are: {all_genes}")
+#print(f"Union: {len(all_genes)} unique genes from all 4 sets combined. \n They are: {all_genes}")
 
 # % genes used by all 4 tools
 percentage_shared = len(intersection) / len(all_genes) * 100
@@ -134,3 +138,31 @@ with open(output_file, 'w') as f:
 
 
 print(f"Results written to {output_file}")
+
+# STEP : Write each gene set to a file to use as input for Venn diagram"
+####################################################################################################################################
+# Each gene set is written to a separate file to be used as input for a Venn diagram tool
+# Each gene on a new line
+# Directory to store the gene sets
+output_dir = "/home/guest/BIT11_Traineeship/Ecoli_AMR/Final_documents/genesets"
+os.makedirs(output_dir, exist_ok=True)
+
+# Write the gene sets to separate files
+with open(os.path.join(output_dir, "RESF_genes.txt"), 'w') as f:
+    for gene in RESF:
+        f.write(f"{gene}\n")
+
+with open(os.path.join(output_dir, "BN_genes.txt"), 'w') as f:
+    for gene in BN:
+        f.write(f"{gene}\n")
+
+with open(os.path.join(output_dir, "RGI_genes.txt"), 'w') as f:
+    for gene in RGI:
+        f.write(f"{gene}\n")
+
+with open(os.path.join(output_dir, "AMRF_genes.txt"), 'w') as f:
+    for gene in AMRF:
+        f.write(f"{gene}\n")    
+
+print(f"Gene sets written to {output_dir}")
+
