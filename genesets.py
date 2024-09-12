@@ -11,7 +11,7 @@ RGI_genes = []
 AMRF_genes = []
 
 # Specify the input file containing all reference lists & load the workbook
-input_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/Reference_lists/reflists.xlsx"
+input_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/Final_documents/reflists.xlsx"
 wb = openpyxl.load_workbook(input_file)
 
 # STEP 1: LOAD THE GENES FROM THE REFERENCE LISTS
@@ -46,29 +46,44 @@ BN = set(BN_genes)
 RGI = set(RGI_genes)
 AMRF = set(AMRF_genes)
 
-# STEP 2 : Compare the genesets e.g. overlap
+# STEP 2 : Calculate the gene counts and shared genes
 ####################################################################################################################################
-# Intersection = Genes that occur in all 4 tools
-intersection = RESF & BN & RGI & AMRF
-RESF_BN_intersection = RESF & BN
-RESF_RGI_intersection = RESF & RGI
-RESF_AMRF_intersection = RESF & AMRF
-BN_RGI_intersection = BN & RGI
-BN_AMRF_intersection = BN & AMRF
-RGI_AMRF_intersection = RGI & AMRF
+# Genes unique to each set
+RESF_unique = RESF - (BN | RGI | AMRF)
+BN_unique = BN - (RESF | RGI | AMRF)
+RGI_unique = RGI - (RESF | BN | AMRF)
+AMRF_unique = AMRF - (RESF | BN | RGI)
 
-#print(f"Intersection: {len(intersection)} genes occur in all 4 tools. \n They are: {intersection}")
+# Genes shared between two tools
+RESF_BN = RESF & BN
+RESF_RGI = RESF & RGI
+RESF_AMRF = RESF & AMRF
+BN_RGI = BN & RGI
+BN_AMRF = BN & AMRF
+RGI_AMRF = RGI & AMRF
+
+# Genes shared between exactly three tools
+RESF_BN_RGI = RESF & BN & RGI
+RESF_BN_AMRF = RESF & BN & AMRF
+RESF_RGI_AMRF= RESF & RGI & AMRF
+BN_RGI_AMRF = BN & RGI & AMRF
+
+# Genes shared across all four tools
+intersection = RESF & BN & RGI & AMRF
+
+print(f"Intersection: {len(intersection)} genes occur in all 4 tools.")
 
 # Union = non-redundant/unique genes from all 4 tools combined
 all_genes = RESF | BN | RGI | AMRF
+"""
 RESF_BN_union = RESF | BN
 RESF_RGI_union = RESF | RGI
 RESF_AMRF_union = RESF | AMRF
 BN_RGI_union = BN | RGI
 BN_AMRF_union = BN | AMRF
 RGI_AMRF_union = RGI | AMRF
-
-#print(f"Union: {len(all_genes)} unique genes from all 4 sets combined. \n They are: {all_genes}")
+"""
+print(f"Union: {len(all_genes)} unique genes from all 4 sets combined. \n They are: {all_genes}")
 
 # % genes used by all 4 tools
 percentage_shared = len(intersection) / len(all_genes) * 100
@@ -77,35 +92,44 @@ percentage_shared = len(intersection) / len(all_genes) * 100
 
 # STEP 3 : Write the results to an output file
 ####################################################################################################################################
-output_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/compare_genesets.txt"
+output_file = "/home/guest/BIT11_Traineeship/Ecoli_AMR/Final_documents/compare_genesets_3.txt"
 with open(output_file, 'w') as f:
-    f.write("Amount of unique genes in each tool:\n")
+    f.write("Amount of genes in each tool:\n")
     f.write("=====================================\n")
     f.write(f"RESF: {len(RESF)} genes\n")
     f.write(f"BN: {len(BN)} genes\n")
     f.write(f"RGI: {len(RGI)} genes\n")
     f.write(f"AMRF: {len(AMRF)} genes\n\n")
-    f.write("Comparison of genesets:\n")
-    f.write("=======================\n")
-    f.write("1) Intersection = genes that occur in both sets\n")
-    f.write(f"RESF & BN: {len(RESF_BN_intersection)} genes occur in both sets. \n")
-    f.write(f"RESF & RGI: {len(RESF_RGI_intersection)} genes occur in both sets. \n")
-    f.write(f"RESF & AMRF: {len(RESF_AMRF_intersection)} genes occur in both sets. \n")
-    f.write(f"BN & RGI: {len(BN_RGI_intersection)} genes occur in both sets. \n")
-    f.write(f"BN & AMRF: {len(BN_AMRF_intersection)} genes occur in both sets. \n")
-    f.write(f"RGI & AMRF: {len(RGI_AMRF_intersection)} genes occur in both sets. \n\n")
-    f.write(f"=> {len(intersection)} genes occur in all 4 sets. \n")
-    f.write("---------------------------------------------- \n")
-    f.write("2) Union = unique genes from both sets combined\n")
-    f.write(f"RESF | BN: {len(RESF_BN_union)} unique genes from both sets combined. \n")
-    f.write(f"RESF | RGI: {len(RESF_RGI_union)} unique genes from both sets combined. \n")
-    f.write(f"RESF | AMRF: {len(RESF_AMRF_union)} unique genes from both sets combined. \n")
-    f.write(f"BN | RGI: {len(BN_RGI_union)} unique genes from both sets combined. \n")
-    f.write(f"BN | AMRF: {len(BN_AMRF_union)} unique genes from both sets combined. \n")
-    f.write(f"RGI | AMRF: {len(RGI_AMRF_union)} unique genes from both sets combined. \n\n")
-    f.write(f"=> {len(all_genes)} unique genes from all 4 sets combined. \n\n")
-    f.write("---------------------------------------------- \n")
-    f.write(f"3) Percentage of genes used by all 4 tools \n")
+
+    f.write("Unique gene counts per tool:\n")
+    f.write("==============================================\n")
+    f.write(f"Unique to RESF: {len(RESF_unique)} genes\n")
+    f.write(f"Unique to BN: {len(BN_unique)} genes\n")
+    f.write(f"Unique to RGI: {len(RGI_unique)} genes\n")
+    f.write(f"Unique to AMRF: {len(AMRF_unique)} genes\n\n")
+
+    f.write("Shared gene counts between two tools:\n")
+    f.write("=================================\n")
+    f.write(f"RESF & BN only: {len(RESF_BN)} genes\n")
+    f.write(f"RESF & RGI only: {len(RESF_RGI)} genes\n")
+    f.write(f"RESF & AMRF only: {len(RESF_AMRF)} genes\n")
+    f.write(f"BN & RGI only: {len(BN_RGI)} genes\n")
+    f.write(f"BN & AMRF only: {len(BN_AMRF)} genes\n")
+    f.write(f"RGI & AMRF only: {len(RGI_AMRF)} genes\n\n")
+    f.write(f"=> {len(intersection)} genes occur in all 4 sets. \n\n")
+
+    f.write("Shared between three tools:\n")
+    f.write("=================================\n")
+    f.write(f"RESF, BN & RGI only: {len(RESF_BN_RGI)} genes\n")
+    f.write(f"RESF, BN & AMRF only: {len(RESF_BN_AMRF)} genes\n")
+    f.write(f"RESF, RGI & AMRF only: {len(RESF_RGI_AMRF)} genes\n")
+    f.write(f"BN, RGI & AMRF only: {len(BN_RGI_AMRF)} genes\n\n")
+
+    f.write("Shared genes between 4 tools:\n")
+    f.write("=================================\n")
+    f.write(f"{len(all_genes)} unique genes from all 4 tools combined. \n\n")
+
+    f.write(f"Percentage of genes used by all 4 tools \n")
     f.write(f"{percentage_shared:.2f}%\n")
 
 
